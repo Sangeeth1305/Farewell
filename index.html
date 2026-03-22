@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>B.Com CA | Batch 2025–28</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --cream: #f5f0e8;
+      --dark: #1a1612;
+      --ink: #2e2720;
+      --muted: #7a6e62;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--dark);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('image.png');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.88) saturate(0.95);
+      transform: scale(1.04);
+      transition: transform 12s ease-out;
+      z-index: 0;
+    }
+    .hero:hover .hero-bg { transform: scale(1.0); }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,8,6,0.03) 0%,
+        rgba(10,8,6,0.0) 30%,
+        rgba(10,8,6,0.22) 100%
+      );
+      z-index: 1;
+    }
+
+    /* ── FLOATING PARTICLES ── */
+    .particles {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.8);
+      animation: floatParticle linear infinite;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      padding: 2rem;
+      animation: fadeUp 1.2s ease both;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.65);
+      border: 1px solid rgba(201,168,76,0.8);
+      padding: 0.35rem 1.1rem;
+      border-radius: 100px;
+      margin-bottom: 1.6rem;
+      background: rgba(0,0,0,0.1);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: rgba(245,240,232,0.65);
+      letter-spacing: -0.01em;
+      animation: textDrift 9s ease-in-out infinite;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: rgba(232,201,122,0.65);
+    }
+
+    .hero-sub {
+      margin-top: 1.2rem;
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(245,240,232,0.95);
+      letter-spacing: 0.05em;
+      animation: textDrift 13s 3s ease-in-out infinite reverse;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0.5;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cream);
+      animation: fadeUp 1.8s 1s ease both;
+    }
+    .scroll-hint .line {
+      width: 1px;
+      height: 36px;
+      background: var(--gold);
+      animation: scrollLine 1.8s 1.2s ease-in-out infinite;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .section {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+    .section-rule {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      margin-bottom: 2.5rem;
+      border: none;
+    }
+
+    /* ── SLIDESHOW ── */
+    .slideshow-wrap {
+      display: grid;
+      grid-template-columns: 2fr 1px 1fr;
+      gap: 0 2.5rem;
+      align-items: center;
+      min-height: 560px;
+    }
+
+    .slide-photo-side {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 16/10;
+      background: #111;
+    }
+
+    .slide-img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    .slide-img.active { opacity: 1; }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: rgba(245,240,232,0.75);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      user-select: none;
+    }
+    .arrow:hover {
+      background: rgba(201,168,76,0.28);
+      color: var(--gold-light);
+    }
+    .arrow.prev { left: 12px; }
+    .arrow.next { right: 12px; }
+
+    .slide-progress {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 3px;
+      background: var(--gold);
+      width: 0%;
+      transition: width linear;
+      z-index: 4;
+    }
+
+    .slide-divider {
+      width: 1px;
+      height: 320px;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+      align-self: center;
+    }
+
+    .slide-caption-side { padding: 1rem 0.5rem; }
+    .slide-counter {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+    .slide-caption-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+      color: var(--cream);
+      margin-bottom: 0.8rem;
+      min-height: 2.4em;
+      transition: opacity 0.4s ease;
+    }
+    .slide-caption-text {
+      font-size: 0.92rem;
+      font-weight: 300;
+      color: rgba(245,240,232,0.55);
+      line-height: 1.75;
+      min-height: 4em;
+      transition: opacity 0.4s ease;
+    }
+    .caption-fade { opacity: 0; }
+
+    @media (max-width: 700px) {
+      .slideshow-wrap { grid-template-columns: 1fr; }
+      .slide-divider { display: none; }
+      .slide-caption-side { padding-top: 1.2rem; }
+    }
+
+    /* ── VIDEO SECTION ── */
+    .video-section {
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #0a0a0a;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.15);
+      transition: box-shadow 0.3s ease;
+    }
+    .video-wrap:hover {
+      box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.35);
+    }
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-label {
+      text-align: center;
+      margin-top: 1.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.5);
+    }
+    .video-label kbd {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      color: rgba(201,168,76,0.7);
+      background: rgba(201,168,76,0.08);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem 4rem;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    footer .footer-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--gold-light);
+      opacity: 0.8;
+    }
+    footer p {
+      margin-top: 0.6rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollLine {
+      0%   { transform: scaleY(0); transform-origin: top; }
+      50%  { transform: scaleY(1); transform-origin: top; }
+      51%  { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+    @keyframes textDrift {
+      0%   { transform: translate(0px, 0px); }
+      25%  { transform: translate(6px, -4px); }
+      50%  { transform: translate(-4px, 6px); }
+      75%  { transform: translate(-7px, -3px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes floatParticle {
+      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.7; }
+      100% { transform: translateY(-110vh) translateX(var(--dx)) scale(0.4); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="particles" id="particles"></div>
+    <div class="hero-content">
+      <div class="badge">Farewell</div>
+      <h1>B.Com CA<br/><em>Batch 2025–28</em></h1>
+      <p class="hero-sub">Here's to every memory we made together.</p>
+    </div>
+    <div class="scroll-hint">
+      <div class="line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- ── MEMORIES SLIDESHOW ── -->
+  <div class="section">
+    <h2 class="section-title">Our Moments</h2>
+    <hr class="section-rule"/>
+    <div class="slideshow-wrap">
+      <div class="slide-photo-side" id="photoSide">
+        <img class="slide-img active" src="image.png" alt="Photo 1"/>
+        <img class="slide-img"        src="group15.png" alt="Photo 2"/>
+        <img class="slide-img"        src="group7.png" alt="Photo 3"/>
+        <img class="slide-img"        src="group14.png" alt="Photo 4"/>
+        <img class="slide-img"        src="random5.png" alt="Photo 5"/>
+        <img class="slide-img"        src="group20.png" alt="Photo 6"/>
+        <img class="slide-img"        src="random3.png" alt="Photo 7"/>
+        <img class="slide-img"        src="group2.png" alt="Photo 8"/>
+        <img class="slide-img"        src="group16.png" alt="Photo 9"/>
+        <img class="slide-img"        src="random9.png" alt="Photo 10"/>
+        <img class="slide-img"        src="group6.png" alt="Photo 11"/>
+        <img class="slide-img"        src="group19.png" alt="Photo 12"/>
+        <img class="slide-img"        src="group3.png" alt="Photo 13"/>
+        <img class="slide-img"        src="group4.png" alt="Photo 14"/>
+        <img class="slide-img"        src="random1.png" alt="Photo 15"/>
+        <img class="slide-img"        src="group13.png" alt="Photo 16"/>
+        <img class="slide-img"        src="group8.png" alt="Photo 17"/>
+        <img class="slide-img"        src="group9.png" alt="Photo 18"/>
+        <img class="slide-img"        src="group18.png" alt="Photo 19"/>
+        <img class="slide-img"        src="group11.png" alt="Photo 20"/>
+        <img class="slide-img"        src="group12.png" alt="Photo 21"/>
+        <img class="slide-img"        src="group17.png" alt="Photo 22"/>
+        <img class="slide-img"        src="group1.png" alt="Photo 23"/>
+        <img class="slide-img"        src="group5.png" alt="Photo 24"/>
+        <img class="slide-img"        src="group21.png" alt="Photo 25"/>
+        <img class="slide-img"        src="random10.png" alt="Photo 26"/>
+        <img class="slide-img"        src="group23.png" alt="Photo 27"/>
+        <img class="slide-img"        src="group24.png" alt="Photo 28"/>
+        <img class="slide-img"        src="random4.png" alt="Photo 29"/>
+        <img class="slide-img"        src="random7.png" alt="Photo 30"/>
+        <img class="slide-img"        src="random2.png" alt="Photo 31"/>
+        <img class="slide-img"        src="random8.png" alt="Photo 32"/>
+        <img class="slide-img"        src="group25.png" alt="Photo 33"/>
+        <button class="arrow prev" id="prevBtn">&#8249;</button>
+        <button class="arrow next" id="nextBtn">&#8250;</button>
+        <div class="slide-progress" id="progressBar"></div>
+        <div class="slide-dots" id="dotsWrap"></div>
+      </div>
+      <div class="slide-divider"></div>
+      <div class="slide-caption-side">
+        <div class="slide-counter" id="slideCounter">01 / 33</div>
+        <div class="slide-caption-title" id="captionTitle">First Day Together</div>
+        <div class="slide-caption-text" id="captionText">
+          The beginning of something unforgettable. We walked in as strangers.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VIDEO SECTION ── -->
+  <div class="section video-section">
+    <div class="video-wrap" id="videoWrap">
+      <iframe
+        id="vimeoPlayer"
+        src="https://player.vimeo.com/video/1175854930?badge=0&autopause=0&player_id=0&app_id=58479"
+        title="B.Com CA Batch 2025-28 Farewell"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <p class="video-label">Press <kbd>F</kbd> to fullscreen </p>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p class="footer-title">"Not a goodbye- Still more awaits."</p>
+    <p>B.Com CA &nbsp;·&nbsp; Batch 2025–28 &nbsp;·&nbsp; Always Together</p>
+  </footer>
+
+  <script>
+    /* ── PARTICLES ── */
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 5 + 2;
+      const left = Math.random() * 100;
+      const dur  = Math.random() * 12 + 8;
+      const del  = Math.random() * 14;
+      const dx   = (Math.random() - 0.5) * 120 + 'px';
+      p.style.cssText = [
+        'width:' + size + 'px',
+        'height:' + size + 'px',
+        'left:' + left + '%',
+        'bottom:-10px',
+        '--dx:' + dx,
+        'animation-duration:' + dur + 's',
+        'animation-delay:-' + del + 's',
+        'opacity:0'
+      ].join(';');
+      container.appendChild(p);
+    }
+
+    /* ── F KEY FULLSCREEN ── */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'f' || e.key === 'F') {
+        const wrap = document.getElementById('videoWrap');
+        if (!document.fullscreenElement) {
+          wrap.requestFullscreen().catch(err => console.log(err));
+        } else {
+          document.exitFullscreen();
+        }
+      }
+    });
+
+    /* ── SLIDESHOW ── */
+    const slides = [
+      { title: "First Day Together",   text: "The beginning of something unforgettable. We walked in as strangers." },
+      { title: "Call-off Chronicles",  text: "Konchom Kadamaiku kadupadu irukom illa na siragadipom nango!" },
+      { title: "Group Click",          text: "Serenity by the water. Watching the sun dip low, just grateful for the moments we shared." },
+      { title: "Perapatta Paytm Amount 75!", text: "Me and bros hitting this pose after paymemnt." },
+      { title: "Fahhhhh",              text: "Titanic Pose Recreation tha , I don't want any fake allegation." },
+      { title: "Enthusiast",           text: "Remember the quick touch-ups between classes and the whispered secrets that only those walls heard?" },
+      { title: "Apoorva Sagodharigal", text: "Irukalam yaru ku theriyum!" },
+      { title: "Movie Snap",           text: "Cinema Nights and shared laughter. That late-night hang at the mall." },
+      { title: "Monochrome Click",     text: "Ithu monochrome illa , Normal photo va edunga da ethuku filter uh?" },
+      { title: "#Swaggers",            text: "Hell yeah, Flipp'n the Fin*ers, Poggg Champs" },
+      { title: "Annachi Piranthanal",  text: "Memorable Celebration. When the messy smiles and first bites of cake were all that counted." },
+      { title: "Surya Vamsam 2.0",     text: "Chinrasau? Entra kudambathula ella vanthachu sikaro edu!" },
+      { title: "Birthday Bash",        text: "Lunch and real talk. Birthday parties, and a family we chose for ourselves." },
+      { title: "Ooty Diaries",         text: "Finding our way, together. A spontaneous selfie beneath a sign we'll always recognize." },
+      { title: "Swimming Atrocities",  text: "Random Clicks are the best candid photos." },
+      { title: "Group Presentation",   text: "Basically na oru watch mechanic!, #TeamKKC" },
+      { title: "#Sooru Tha Mukiyam",   text: "The hustle and hope. College days, endless bunks, and the friendships that kept us going." },
+      { title: "Teamed Up",            text: "Caught up. Simple moments, big dreams, and a bond that only gets stronger." },
+      { title: "#Nadippu Arakkan",     text: "Best Performance of the Show, Absolute Cinema!" },
+      { title: "On top of World",      text: "Chasing the sun, chasing dreams. Reaching the peak and knowing we did it together." },
+      { title: "Atti Culture",         text: "Ladies Ranuva padai, Teja Akka Payalugada!" },
+      { title: "Vera Mari Gang",       text: "Inspired a shot from vadachennai. It ain't vetrimaran film bro!" },
+      { title: "Corridor Clicks",      text: "The beginning of it all. Remember standing in that endless corridor." },
+      { title: "Unforgettable Journey",text: "Wanderlust in motion. The rhythmic clatter of the train and the endless conversations we shared." },
+      { title: "Chalkboard Chapters",  text: "Remember the nervous energy before presentations and the big dreams we sketched in clouds of chalk dust?" },
+      { title: "King Kishore",         text: "You ain't Shah Rukh Khan from king bro!" },
+      { title: "Movies Day Out",       text: "Enuma Ghilli Re-rerelease poninga still in big '26?, Great Movie tho!" },
+      { title: "Bunked",               text: "Library poi padinga, Growth of a Women is the growth of the country." },
+      { title: "Yara Nee",             text: "Aadine Irupen! Aiyoo saami ivan vera poda angudu." },
+      { title: "Mobster",              text: "Boost is the secret of sam's energy. #No smoking!" },
+      { title: "#Sorna akka",          text: "Vagundhu Viduen!, Just Kidding Goofiest Rep" },
+      { title: "Bro ithu Erunethi",    text: "Blud flexing his real estate assests. Very Wrong Bro!" },
+      { title: "Jeevika Payalugada!",  text: "Engaluku paiyam na enanu theriyathu, vena mammey ithu vera mari gang!" },
+    ];
+
+    const INTERVAL = 7000;
+    const imgs     = document.querySelectorAll('.slide-img');
+    const dotsWrap = document.getElementById('dotsWrap');
+    const counter  = document.getElementById('slideCounter');
+    const titleEl  = document.getElementById('captionTitle');
+    const textEl   = document.getElementById('captionText');
+    const progress = document.getElementById('progressBar');
+    const total    = imgs.length;
+    let   current  = 0;
+    let   timer;
+
+    imgs.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(d);
+    });
+
+    function pad(n) { return String(n + 1).padStart(2, '0'); }
+
+    function goTo(idx) {
+      imgs[current].classList.remove('active');
+      dotsWrap.children[current].classList.remove('active');
+      current = (idx + total) % total;
+      imgs[current].classList.add('active');
+      dotsWrap.children[current].classList.add('active');
+      counter.textContent = pad(current) + ' / ' + pad(total - 1);
+      titleEl.classList.add('caption-fade');
+      textEl.classList.add('caption-fade');
+      setTimeout(() => {
+        const s = slides[current] || slides[0];
+        titleEl.textContent = s.title;
+        textEl.textContent  = s.text;
+        titleEl.classList.remove('caption-fade');
+        textEl.classList.remove('caption-fade');
+      }, 350);
+      resetProgress();
+    }
+
+    function resetProgress() {
+      clearTimeout(timer);
+      progress.style.transition = 'none';
+      progress.style.width = '0%';
+      setTimeout(() => {
+        progress.style.transition = 'width ' + INTERVAL + 'ms linear';
+        progress.style.width = '100%';
+      }, 30);
+      timer = setTimeout(() => goTo(current + 1), INTERVAL);
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => { clearTimeout(timer); goTo(current - 1); });
+    document.getElementById('nextBtn').addEventListener('click', () => { clearTimeout(timer); goTo(current + 1); });
+
+    goTo(0);
+  </script>
+</body>
+</html>
